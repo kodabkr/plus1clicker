@@ -1,3 +1,7 @@
+for i,v in pairs(getconnections(game:GetService("Players").LocalPlayer.Idled)) do
+    v:Disable()
+end 
+
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/kodabkr/hubLoad/main/main.lua"))()
 local Koko = library.new("Koko Hub", 5013109572)
 
