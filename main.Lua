@@ -1,18 +1,28 @@
+-- Anti-afk
 for i,v in pairs(getconnections(game:GetService("Players").LocalPlayer.Idled)) do
     v:Disable()
-end 
+end
 
+-- Libraries
+local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/notification_gui_library.lua", true))()
+local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/kodabkr/hubLoad/main/main.lua"))()
-local Koko = library.new("Koko Hub", 5013109572)
+local Koko = library.new("Koko Hub | Current Game: " .. gameName .. " |", 5013109572)
 
+-- Variables
 local selectedEgg = nil
 local wheelInterval = nil
 local coreGui = game:GetService("CoreGui")
+local codes = {'ihateseals','scorpio','luckyfrog','KUBO'}
 
+-- Ui Gen
 local FarmSection = Koko:addPage("Farming", 5012544693)
-local automation = FarmSection:addSection("automation")
+local farmMain = FarmSection:addSection("Main")
 
-automation:addToggle("Auto Click", nil, function(state)
+local SettingsSection = Koko:addPage("Settings", 5012544693)
+local settings = SettingsSection:addSection("Main")
+
+farmMain:addToggle("Auto Click", nil, function(state)
 	auto1 = state
 	if auto1 then
 		coroutine.wrap(function()
@@ -23,11 +33,11 @@ automation:addToggle("Auto Click", nil, function(state)
 	end
 end)
 
-automation:addDropdown("Select Egg", { "Grass Egg", "Stone Egg", "Cactus Egg", "Sandstone Egg", "Snowman Egg", "Ice Egg", "Warped Egg", ""}, function(passThrough)
+farmMain:addDropdown("Select Egg", { "Grass Egg", "Stone Egg", "Cactus Egg", "Sandstone Egg", "Snowman Egg", "Ice Egg", "Warped Egg", ""}, function(passThrough)
 	selectedEgg = passThrough
 end)
 
-automation:addToggle("Auto Open Selected Egg", nil, function(state)
+farmMain:addToggle("Auto Open Selected Egg", nil, function(state)
 	auto2 = state
 	if auto2 then
 		coroutine.wrap(function()
@@ -39,7 +49,7 @@ automation:addToggle("Auto Open Selected Egg", nil, function(state)
 	end
 end)
 
-automation:addToggle("Auto Rebirth", nil, function(state)
+farmMain:addToggle("Auto Rebirth", nil, function(state)
 	auto3 = state
 	if auto3 then
 		coroutine.wrap(function()
@@ -51,24 +61,19 @@ automation:addToggle("Auto Rebirth", nil, function(state)
 	end
 end)
 
-automation:addButton("Disable Purchase Prompts", function()
-	coreGui.PurchasePrompt.Enabled = false
+farmMain:addButton("Disable Pop ups", function()
+	game:GetService("Players").LocalPlayer.PlayerGui.Notifications.Box.Visible = false
 end)
 
-automation:addButton("Enable Purchase Prompts", function()
-	coreGui.PurchasePrompt.Enabled = true
+farmMain:addButton("Enable Pop ups", function()
+	game:GetService("Players").LocalPlayer.PlayerGui.Notifications.Box.Visible = true
 end)
 
-automation:addButton("Disable Pop ups (Cant be re-enabled)", function()
-	game:GetService("Players").LocalPlayer.PlayerGui.Notifications.Box:Destroy()
-end)
-
-
-automation:addSlider("Wheel Delay (Seconds)", 1, 0, 30, function(passThrough) -- <StartVal> / <MinVal> / <MaxVal>
+farmMain:addSlider("Wheel Delay (Seconds)", 1, 0, 30, function(passThrough) -- <StartVal> / <MinVal> / <MaxVal>
 	wheelInterval = passThrough
 end)
 
-automation:addToggle("Auto Spin Wheel", nil, function(state)
+farmMain:addToggle("Auto Spin Wheel", nil, function(state)
 	auto4 = state
 	if auto4 then
 		coroutine.wrap(function()
@@ -79,3 +84,26 @@ automation:addToggle("Auto Spin Wheel", nil, function(state)
 		end)()
 	end
 end)
+
+farmMain:addButton("Claim All Codes", function()
+	for _,v in pairs(codes) do
+		local args = {[1] = 0, [2] = v}
+		game:GetService("ReplicatedStorage"):WaitForChild("functions-shared/network@GlobalFunctions"):WaitForChild("s:redeemCode"):FireServer(unpack(args))
+	end		
+end)
+
+settings:addKeybind("Toggle Keybind", Enum.KeyCode.One, function()
+	Koko:toggle()
+end, function()
+	Notification.new("info", "Keybind Update", "You changed your keybind!", true, 5)
+end)
+
+settings:addButton("Disable Purchase Prompts", function()
+	coreGui.PurchasePrompt.Enabled = false
+end)
+
+settings:addButton("Enable Purchase Prompts", function()
+	coreGui.PurchasePrompt.Enabled = true
+end)
+
+Koko:SelectPage(venyx.pages[1], true)
