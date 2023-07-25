@@ -59,6 +59,11 @@ automation:addButton("Enable Purchase Prompts", function()
 	coreGui.PurchasePrompt.Enabled = true
 end)
 
+automation:addButton("Disable Pop ups (Cant be re-enabled)", function()
+	game:GetService("Players").LocalPlayer.PlayerGui.Notifications.Box:Destroy()
+end)
+
+
 automation:addSlider("Wheel Delay (Seconds)", 1, 0, 30, function(passThrough) -- <StartVal> / <MinVal> / <MaxVal>
 	wheelInterval = passThrough
 end)
