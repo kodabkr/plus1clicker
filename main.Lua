@@ -59,7 +59,7 @@ automation:addButton("Enable Purchase Prompts", function()
 	coreGui.PurchasePrompt.Enabled = true
 end)
 
-automation:addSlider("Wheel Delay (Seconds)", 0.1, 0, 30, function(passThrough)
+automation:addSlider("Wheel Delay (Seconds)", 1, 0, 30, function(passThrough) -- <StartVal> / <MinVal> / <MaxVal>
 	wheelInterval = passThrough
 end)
 
